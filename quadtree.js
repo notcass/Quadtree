@@ -1,11 +1,4 @@
-class Point {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-}
-
-class RectangleThing {
+class Rectangle {
   constructor(x, y, w, h) {
     this.x = x;
     this.y = y;
@@ -14,17 +7,17 @@ class RectangleThing {
   }
   show() {
     stroke(255);
-    strokeWeight(2);
+    strokeWeight(0.5);
     noFill();
     rect(this.x, this.y, this.w, this.h);
   }
 
   contains(point) {
     return (
-      point.x > this.x &&
-      point.x < this.x + this.w &&
-      point.y > this.y &&
-      point.y < this.y + this.h
+      point.pos.x > this.x &&
+      point.pos.x < this.x + this.w &&
+      point.pos.y > this.y &&
+      point.pos.y < this.y + this.h
     );
   }
 }
@@ -46,23 +39,24 @@ class Quadtree {
       this.southeast.show();
     }
     this.points.forEach((p) => {
-      point(p.x, p.y);
+      // p.update();
+      p.show();
     });
   }
 
   subdivide() {
     let { x, y, w, h } = this.boundary;
 
-    let nw = new RectangleThing(x, y, w / 2, h / 2);
+    let nw = new Rectangle(x, y, w / 2, h / 2);
     this.northwest = new Quadtree(nw, this.capacity);
 
-    let ne = new RectangleThing(x + w / 2, y, w / 2, h / 2);
+    let ne = new Rectangle(x + w / 2, y, w / 2, h / 2);
     this.northeast = new Quadtree(ne, this.capacity);
 
-    let sw = new RectangleThing(x, y + h / 2, w / 2, h / 2);
+    let sw = new Rectangle(x, y + h / 2, w / 2, h / 2);
     this.southwest = new Quadtree(sw, this.capacity);
 
-    let se = new RectangleThing(x + w / 2, y + h / 2, w / 2, h / 2);
+    let se = new Rectangle(x + w / 2, y + h / 2, w / 2, h / 2);
     this.southeast = new Quadtree(se, this.capacity);
     this.divided = true;
   }
