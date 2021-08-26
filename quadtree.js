@@ -2,7 +2,6 @@ class Point {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.size = 1; // Testing
   }
 }
 
@@ -61,16 +60,6 @@ class Quadtree {
     this.divided = false;
   }
 
-  resetPointSize() {
-    this.points.forEach((p) => (p.size = 1));
-    if (this.divided) {
-      this.northwest.resetPointSize();
-      this.northeast.resetPointSize();
-      this.southwest.resetPointSize();
-      this.southeast.resetPointSize();
-    }
-  }
-
   subdivide() {
     let { x, y, w, h } = this.boundary;
 
@@ -109,13 +98,12 @@ class Quadtree {
   }
 
   query(range, found) {
-    if (!this.boundary.intersects(range)) {
-      return;
-    } else {
+    if (!found) found = [];
+
+    if (this.boundary.intersects(range)) {
       this.points.forEach((p) => {
         if (range.contains(p)) {
           found.push(p);
-          p.size = 5;
         }
       });
 
@@ -125,9 +113,9 @@ class Quadtree {
         this.southwest.query(range, found);
         this.southeast.query(range, found);
       }
-
-      return found;
     }
+
+    return found;
   }
 
   showBoundaries() {
@@ -144,7 +132,7 @@ class Quadtree {
     stroke(255);
     strokeWeight(1);
     this.points.forEach((p) => {
-      circle(p.x, p.y, p.size);
+      point(p.x, p.y);
     });
 
     if (this.divided) {
